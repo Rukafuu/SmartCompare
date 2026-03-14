@@ -1,9 +1,5 @@
 # 📱 SmartCompare | Technical Hardware Analytics
 
-<div align="center">
-  <img width="1200" height="400" alt="SmartCompare Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 > **Laboratório de Análise Neural de Hardware e Sincronização de Especificações em Tempo Real.**
 
 SmartCompare é uma plataforma de comparação técnica de smartphones de última geração, equipada com o **Neural Core V3 powered by Gemini 2.0 Flash**. O sistema realiza extração de dados técnicos em tempo real, validação de homologação ANATEL e análise de fluxo térmico.
