@@ -59,8 +59,6 @@ const translations = {
     heroTitle: "Comparar Modelos",
     heroSub: "Laboratorio de Análisis Térmico y Sincronización de Especificaciones"
   }
- y Sincronización de Especificaciones"
-  }
 };
 
 const FlagBR = () => (
