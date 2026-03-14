@@ -1,0 +1,7 @@
+{
+  "name": "SmartCompare",
+  "description": "A high-performance smartphone comparison tool focused on official hardware specifications and global technical standards, featuring intelligent rankings and AI-powered data fetching.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

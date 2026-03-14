@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartCompare | Technical Analytics</title>
+    <!-- Favicon SVG: Ícone de Comparação Interligado -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='%23444' stroke-width='2'/%3E%3Cpath d='M25 40 L12 40 L25 27 M12 40 L25 53' fill='none' stroke='%23FF6900' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M12 40 H45 C58 40 58 68 45 68 H18' fill='none' stroke='%23FF6900' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M75 60 L88 60 L75 73 M88 60 L75 47' fill='none' stroke='%23444' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M88 60 H55 C42 60 42 32 55 32 H82' fill='none' stroke='%23444' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg-main: #F0F2F5;
+        --bg-surface: #FFFFFF;
+        --bg-glass: rgba(255, 255, 255, 0.8);
+        --text-primary: #1A1A1A;
+        --text-secondary: #64748B;
+        --border-color: rgba(0, 0, 0, 0.1);
+        --accent-orange: #FF6900;
+        --accent-glow: rgba(255, 105, 0, 0.15);
+        --card-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
+      }
+
+      [data-theme="dark"] {
+        --bg-main: #000000;
+        --bg-surface: #121212;
+        --bg-glass: rgba(18, 18, 18, 0.8);
+        --text-primary: #F8FAFC;
+        --text-secondary: #94A3B8;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --accent-orange: #FF6900;
+        --accent-glow: rgba(255, 105, 0, 0.2);
+        --card-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .hyper-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .hyper-input {
+        background: var(--bg-main);
+        border: 2px solid transparent;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+      }
+      
+      .hyper-input:focus {
+        background: var(--bg-surface);
+        border-color: var(--accent-orange);
+        box-shadow: 0 0 0 4px var(--accent-glow);
+      }
+
+      .orange-gradient {
+        background: linear-gradient(135deg, #FF6900 0%, #FF8E3E 100%);
+      }
+
+      /* Markdown Formatting for Chat */
+      .markdown-content p { margin-bottom: 0.75rem; margin-top: 0; }
+      .markdown-content p:last-child { margin-bottom: 0; }
+      .markdown-content strong { color: var(--accent-orange); font-weight: 800; }
+      .markdown-content ul { list-style-type: none; padding-left: 0; margin-bottom: 0.75rem; }
+      .markdown-content li { position: relative; padding-left: 1.25rem; margin-bottom: 0.25rem; }
+      .markdown-content li::before { 
+        content: ""; 
+        position: absolute; 
+        left: 0; 
+        top: 0.5rem; 
+        width: 6px; 
+        height: 6px; 
+        background-color: var(--accent-orange); 
+        border-radius: 50%; 
+      }
+      .markdown-content h1, .markdown-content h2, .markdown-content h3 { 
+        font-weight: 900; 
+        text-transform: uppercase; 
+        letter-spacing: -0.02em; 
+        margin-top: 1rem; 
+        margin-bottom: 0.5rem;
+        font-style: italic;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+
+      .custom-scrollbar-h::-webkit-scrollbar {
+        height: 6px;
+      }
+      .custom-scrollbar-h::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 10px;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-markdown": "https://esm.sh/react-markdown@^9.0.0",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased selection:bg-[#FF6900] selection:text-white">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
