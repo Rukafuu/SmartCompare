@@ -2,7 +2,14 @@
 import { GoogleGenAI, Type, Chat } from "@google/genai";
 import { Smartphone } from "../types";
 
-const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY || "");
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+console.log("SmartCompare Debug - API Key loaded:", apiKey ? "YES (starts with " + apiKey.substring(0, 5) + ")" : "NO");
+
+if (!apiKey) {
+  console.error("CRITICAL: VITE_GEMINI_API_KEY is missing in import.meta.env!");
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey || "" });
 
 const smartphoneSchema = {
   type: Type.OBJECT,
@@ -43,22 +50,20 @@ const smartphoneSchema = {
 
 export const fetchSmartphoneSpecs = async (modelName: string): Promise<Smartphone | null> => {
   try {
-    const model = genAI.getGenerativeModel({ 
+    const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: smartphoneSchema,
-      }
-    });
-
-    const result = await model.generateContent(`Analise o smartphone: ${modelName}. 
+      contents: `Analise o smartphone: ${modelName}. 
       FOCO RÍGIDO: Especificações técnicas e VERDADEIRO status de homologação ANATEL no Brasil.
       - Verifique se o modelo foi lançado oficialmente no mercado brasileiro.
-      - Modelos como Poco F6 e similares que são vendidos apenas via marketplaces (importação) SEM homologação direta da DL/Xiaomi Brasil devem ter 'isAnatelCertified' como FALSE.
-      - Não invente certificados. Se não houver homologação oficial, marque como falso.`);
+      - Modelos como Poco F6 e similares que são vendidos apenas via marketplaces (importação) SEM homologação direta da DL/Xiaomi Brasil devem ter 'isAnatelCertified' as FALSE.
+      - Não invente certificados. Se não houver homologação oficial, marque como falso.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: smartphoneSchema,
+      },
+    });
 
-    const response = await result.response;
-    const data = JSON.parse(response.text().trim());
+    const data = JSON.parse(response.text.trim());
     
     return {
       ...data,
@@ -73,24 +78,28 @@ export const fetchSmartphoneSpecs = async (modelName: string): Promise<Smartphon
 
 export const identifySmartphone = async (base64Data: string, mimeType: string): Promise<string> => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent([
-      {
-        inlineData: { data: base64Data, mimeType }
-      },
-      { text: "Identifique este smartphone. Responda apenas o nome do modelo." }
-    ]);
-    const response = await result.response;
-    return response.text()?.trim() || "Desconhecido";
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: [
+        {
+          parts: [
+            { inlineData: { data: base64Data, mimeType } },
+            { text: "Identifique este smartphone. Responda apenas o nome do modelo." }
+          ]
+        }
+      ]
+    });
+    return response.text?.trim() || "Desconhecido";
   } catch (error) {
     return "Desconhecido";
   }
 };
 
 export const createLiraChat = (): Chat => {
-  const model = genAI.getGenerativeModel({ 
+  return ai.chats.create({
     model: 'gemini-2.0-flash',
-    systemInstruction: `Você é a Lira, consultora técnica do laboratório SmartCompare.
+    config: {
+      systemInstruction: `Você é a Lira, consultora técnica do laboratório SmartCompare.
       Sua missão é garantir que o cliente faça a escolha tecnicamente mais segura e performática.
 
       REGRA DE OURO SOBRE HOMOLOGAÇÃO:
@@ -105,7 +114,7 @@ export const createLiraChat = (): Chat => {
       - Se questionada sobre PREÇO: Use como referência APENAS os valores das lojas oficiais (Xiaomi Brasil/DL, Samsung Store, etc), pois são os valores que garantem a segurança técnica que o laboratório preza.
       - Use [[Modelo]] para sugerir.
       - Mantenha a metodologia interna (Conexão, Descoberta, Sugestão, Fechamento, Pós) sem citar os nomes.
-      - Responda em Markdown com negrito para hardware.`
+      - Responda em Markdown com negrito para hardware.`,
+    },
   });
-  return model.startChat();
 };

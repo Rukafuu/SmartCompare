@@ -1,20 +1,71 @@
+# 📱 SmartCompare | Technical Hardware Analytics
+
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+  <img width="1200" height="400" alt="SmartCompare Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+> **Laboratório de Análise Neural de Hardware e Sincronização de Especificações em Tempo Real.**
 
-This contains everything you need to run your app locally.
+SmartCompare é uma plataforma de comparação técnica de smartphones de última geração, equipada com o **Neural Core V3 powered by Gemini 2.0 Flash**. O sistema realiza extração de dados técnicos em tempo real, validação de homologação ANATEL e análise de fluxo térmico.
 
-View your app in AI Studio: https://ai.studio/apps/drive/19AWLvm7qgBlg2bO9ivrwMrOhbK_8ChKe
+---
 
-## Run Locally
+## ⚡ Core Features
 
-**Prerequisites:**  Node.js
+*   **🔍 Neural Extraction:** Busca e processamento de especificações técnicas em tempo real via Gemini 2.0 Flash.
+*   **🇧🇷 Protocolo Nacional:** Verificação rigorosa de homologação oficial (Anatel) e garantia no Brasil.
+*   **🤖 Lira Assistant:** Consultora técnica inteligente integrada para auxiliar na jornada de escolha do dispositivo ideal.
+*   **💎 Premium UI:** Interface construída com Glassmorphism, animações fluídas e suporte nativo a Dark Mode.
+*   **🌍 Multilingual Grounding:** Suporte completo em Português, Inglês e Espanhol.
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🚀 Tecnologias
+
+*   **Frontend:** React 19 + TypeScript
+*   **Styling:** Tailwind CSS 4.0 + PostCSS
+*   **Intelligence:** Google Gen AI SDK (Gemini 2.0 Flash)
+*   **Build Tool:** Vite 6
+
+---
+
+## 🛠️ Configuração Local
+
+### Pré-requisitos
+*   [Node.js](https://nodejs.org/) (v20 ou superior)
+
+### Instalação
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/Rukafuu/smart-compare.git
+   cd smart-compare
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure as variáveis de ambiente:
+   Crie um arquivo `.env.local` na raiz e adicione sua chave do Gemini:
+   ```env
+   VITE_GEMINI_API_KEY=sua_chave_aqui
+   ```
+
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins de laboratório técnico. Sinta-se à vontade para explorar e contribuir.
+
+---
+
+<div align="center">
+  Feito com ☕ e ❤️ por <a href="https://github.com/Rukafuu">Lucas Frischeisen</a>
+</div>
