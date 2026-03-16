@@ -5,6 +5,7 @@ import { Smartphone } from '../types';
 interface Props {
   phones: Smartphone[];
   onRemove: (id: string) => void;
+  onUpdatePhone?: (phone: Smartphone) => void;
   onAddClick: () => void;
   lang: 'pt' | 'en' | 'es';
 }
@@ -28,7 +29,8 @@ const translations = {
     officialDL: "OFICIAL BR",
     officialOther: "NACIONAL",
     global: "IMPORTADO",
-    homologated: "SELO ANATEL"
+    homologated: "SELO ANATEL",
+    selectVersion: "Alterar Versão"
   },
   en: {
     empty: "No device selected",
@@ -48,7 +50,8 @@ const translations = {
     officialDL: "OFFICIAL BR",
     officialOther: "NATIONAL",
     global: "IMPORTED",
-    homologated: "ANATEL SEAL"
+    homologated: "ANATEL SEAL",
+    selectVersion: "Change Version"
   },
   es: {
     empty: "Ningún dispositivo seleccionado",
@@ -68,12 +71,27 @@ const translations = {
     officialDL: "OFICIAL BR",
     officialOther: "NACIONAL",
     global: "IMPORTADO",
-    homologated: "SELLO ANATEL"
+    homologated: "SELLO ANATEL",
+    selectVersion: "Cambiar Versión"
   }
 };
 
-const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }) => {
+const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onUpdatePhone, onAddClick, lang }) => {
   const t = translations[lang];
+
+  const handleVariantChange = (phone: Smartphone, variant: { ram: number; storage: number }) => {
+    if (onUpdatePhone) {
+      onUpdatePhone({
+        ...phone,
+        ram: {
+          ...phone.ram,
+          physical: variant.ram,
+          total: variant.ram + phone.ram.virtual
+        },
+        storage: variant.storage
+      });
+    }
+  };
   
   if (phones.length === 0) {
     return (
@@ -108,7 +126,30 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
     { label: t.processor, key: 'processor' },
     { label: t.display, accessor: (p: Smartphone) => p.screenSize ? `${p.screenSize}" ${p.screenType || ''}` : 'Não inf.' },
     { label: t.refresh, key: 'refreshRate' },
-    { label: t.ram, accessor: (p: Smartphone) => (p.ram.physical > 0) ? `${p.ram.physical}GB + ${p.ram.virtual}GB` : 'N/A' },
+    { label: t.ram, accessor: (p: Smartphone) => {
+      const hasVariants = p.variants && p.variants.length > 1;
+      return (
+        <div className="flex flex-col items-center gap-1">
+          <span>{(p.ram.physical > 0) ? `${p.ram.physical}GB + ${p.ram.virtual}GB` : 'N/A'}</span>
+          {hasVariants && (
+             <select 
+                className="bg-(--bg-main) border border-(--border-color) rounded px-1 py-0.5 text-[8px] outline-none cursor-pointer hover:border-[#FF6900]/50"
+                onChange={(e) => {
+                  const [ram, storage] = e.target.value.split('-').map(Number);
+                  handleVariantChange(p, { ram, storage });
+                }}
+                value={`${p.ram.physical}-${p.storage}`}
+             >
+               {p.variants?.map((v, i) => (
+                 <option key={i} value={`${v.ram}-${v.storage}`}>
+                   {v.ram}GB / {v.storage}GB
+                 </option>
+               ))}
+             </select>
+          )}
+        </div>
+      );
+    }},
     { label: t.storage, key: 'storage', suffix: ' GB' },
     { label: t.battery, key: 'battery', suffix: ' mAh' },
     { label: t.rearCam, key: 'rearCamera' },

@@ -144,6 +144,10 @@ const App: React.FC = () => {
     setPhones(prev => prev.filter(p => p.id !== id));
   };
 
+  const updatePhone = (updatedPhone: Smartphone) => {
+    setPhones(prev => prev.map(p => p.id === updatedPhone.id ? updatedPhone : p));
+  };
+
   const focusSearch = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -263,6 +267,7 @@ const App: React.FC = () => {
                 <ComparisonTable 
                   phones={phones} 
                   onRemove={removePhone} 
+                  onUpdatePhone={updatePhone}
                   onAddClick={focusSearch}
                   lang={lang}
                 />

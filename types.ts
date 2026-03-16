@@ -27,6 +27,10 @@ export interface Smartphone {
   imageUrl?: string;
   dataSource?: 'AI_REALTIME' | 'DATABASE_CACHE';
   confidenceScore?: number;
+  variants?: Array<{
+    ram: number;
+    storage: number;
+  }>;
 }
 
 export interface ComparisonRanking {

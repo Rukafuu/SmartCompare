@@ -37,7 +37,19 @@ const smartphoneSchema = {
     isAnatelCertified: { type: Type.BOOLEAN, description: "TRUE se o modelo tem homologação oficial no Brasil." },
     anatelCertificate: { type: Type.STRING, description: "Número do certificado Anatel se existir." },
     officialDistributor: { type: Type.STRING, description: "Distribuidor oficial no Brasil (ex: Samsung Brasil, Motorola Brasil, DL Eletrônicos)." },
-    confidenceScore: { type: Type.NUMBER, description: "Nível de certeza 0-100" }
+    confidenceScore: { type: Type.NUMBER, description: "Nível de certeza 0-100" },
+    variants: {
+      type: Type.ARRAY,
+      description: "Lista de variantes de memória/armazenamento disponíveis (ex: [{ram: 8, storage: 128}, {ram: 12, storage: 256}])",
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          ram: { type: Type.NUMBER },
+          storage: { type: Type.NUMBER }
+        },
+        required: ["ram", "storage"]
+      }
+    }
   },
   required: [
     "model", "brand", "processor", "ram", "storage", "battery", "antutu", "isAnatelCertified", "officialDistributor", "screenSize", "screenType"
