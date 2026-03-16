@@ -141,7 +141,7 @@ const LiraAssistant: React.FC<Props> = ({ onAddPhone, lang }) => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-[1000] flex flex-col items-end pointer-events-none">
+    <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-1000 flex flex-col items-end pointer-events-none">
       {isOpen && (
         <div className="w-[calc(100vw-2rem)] md:w-[420px] h-auto max-h-[calc(100vh-140px)] md:h-[600px] mb-4 hyper-card flex flex-col shadow-2xl animate-fade-in-up border-[#FF6900]/20 pointer-events-auto overflow-hidden">
           {/* Header - Mais robusto */}
@@ -164,7 +164,7 @@ const LiraAssistant: React.FC<Props> = ({ onAddPhone, lang }) => {
           </div>
 
           {/* Chat Area - Aumentado pt-10 para evitar corte da primeira bolha */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto bg-[var(--bg-main)]/30 custom-scrollbar relative">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto bg-(--bg-main)/30 custom-scrollbar relative">
             <div className="p-4 pt-10 pb-8 space-y-8">
               {messages.map((msg, i) => {
                 const recs = msg.role === 'model' ? extractRecommendations(msg.text) : [];
@@ -180,7 +180,7 @@ const LiraAssistant: React.FC<Props> = ({ onAddPhone, lang }) => {
                     <div className={`max-w-[92%] p-4 rounded-2xl text-xs md:text-[13px] leading-relaxed shadow-sm ${
                       msg.role === 'user' 
                       ? 'bg-[#FF6900] text-white rounded-tr-none font-medium' 
-                      : 'bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-tl-none border border-[var(--border-color)]'
+                      : 'bg-(--bg-surface) text-(--text-primary) rounded-tl-none border border-(--border-color)'
                     }`}>
                       {msg.role === 'model' ? (
                         <div className="markdown-content">
@@ -208,7 +208,7 @@ const LiraAssistant: React.FC<Props> = ({ onAddPhone, lang }) => {
               })}
               {loading && (
                 <div className="flex items-start">
-                  <div className="bg-[var(--bg-surface)] p-3 rounded-2xl rounded-tl-none border border-[var(--border-color)]">
+                  <div className="bg-(--bg-surface) p-3 rounded-2xl rounded-tl-none border border-(--border-color)">
                     <div className="flex gap-1.5">
                       <div className="w-1.5 h-1.5 bg-[#FF6900] rounded-full animate-bounce"></div>
                       <div className="w-1.5 h-1.5 bg-[#FF6900] rounded-full animate-bounce [animation-delay:0.2s]"></div>
@@ -221,7 +221,7 @@ const LiraAssistant: React.FC<Props> = ({ onAddPhone, lang }) => {
           </div>
 
           {/* Input Area */}
-          <div className="shrink-0 p-4 bg-[var(--bg-surface)] border-t border-[var(--border-color)] shadow-inner">
+          <div className="shrink-0 p-4 bg-(--bg-surface) border-t border-(--border-color) shadow-inner">
             {selectedImage && (
               <div className="mb-3 relative inline-block group">
                 <img src={`data:${selectedImage.mime};base64,${selectedImage.data}`} className="w-16 h-16 object-cover rounded-lg border-2 border-[#FF6900] shadow-lg" alt="Preview" />

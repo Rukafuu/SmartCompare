@@ -151,14 +151,14 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-700">
       {/* Header Premium - Responsivo */}
-      <nav className="sticky top-0 z-[100] backdrop-blur-3xl bg-[var(--bg-glass)] border-b border-[var(--border-color)]">
+      <nav className="sticky top-0 z-100 backdrop-blur-3xl bg-(--bg-glass) border-b border-(--border-color)">
         <div className="max-w-[1536px] mx-auto px-4 md:px-16 h-20 md:h-28 flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6 cursor-pointer hyper-button group" onClick={handleReset}>
-            <div className="w-10 h-10 md:w-16 md:h-16 orange-gradient rounded-xl md:rounded-[1.5rem] flex items-center justify-center p-1.5 shadow-2xl group-hover:scale-105 transition-all">
+            <div className="w-10 h-10 md:w-16 md:h-16 orange-gradient rounded-xl md:rounded-3xl flex items-center justify-center p-1.5 shadow-2xl group-hover:scale-105 transition-all">
               <CompareLogoIcon />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg md:text-2xl font-black tracking-tighter text-[var(--text-primary)] leading-none uppercase italic">
+              <span className="text-lg md:text-2xl font-black tracking-tighter text-(--text-primary) leading-none uppercase italic">
                 SmartCompare
               </span>
               <span className="text-[8px] md:text-[12px] font-black text-[#FF6900] tracking-[0.5em] mt-1 md:mt-2 opacity-90 uppercase">
@@ -168,22 +168,22 @@ const App: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 md:gap-6">
-            <div className="flex items-center bg-[var(--bg-main)]/50 rounded-2xl p-1 border border-[var(--border-color)]">
+            <div className="flex items-center bg-(--bg-main)/50 rounded-2xl p-1 border border-(--border-color)">
               <button 
                 onClick={() => setLang('pt')} 
-                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'pt' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-[var(--border-color)] opacity-50 hover:opacity-100'}`}
+                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'pt' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-(--border-color) opacity-50 hover:opacity-100'}`}
               >
                 <FlagBR />
               </button>
               <button 
                 onClick={() => setLang('en')} 
-                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'en' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-[var(--border-color)] opacity-50 hover:opacity-100'}`}
+                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'en' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-(--border-color) opacity-50 hover:opacity-100'}`}
               >
                 <FlagUS />
               </button>
               <button 
                 onClick={() => setLang('es')} 
-                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'es' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-[var(--border-color)] opacity-50 hover:opacity-100'}`}
+                className={`w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all ${lang === 'es' ? 'bg-[#FF6900] shadow-lg scale-105' : 'hover:bg-(--border-color) opacity-50 hover:opacity-100'}`}
               >
                 <FlagES />
               </button>
@@ -191,7 +191,7 @@ const App: React.FC = () => {
 
             <button 
               onClick={toggleTheme}
-              className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--accent-glow)] transition-all shadow-sm"
+              className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center border border-(--border-color) text-(--text-primary) hover:bg-(--accent-glow) transition-all shadow-sm"
             >
               {theme === 'dark' ? (
                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -213,11 +213,11 @@ const App: React.FC = () => {
 
       <main className="flex-1 max-w-[1536px] mx-auto w-full px-4 md:px-16 py-8 md:py-32 space-y-16 md:space-y-32">
         {loading && (
-          <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-3xl z-[200] flex items-center justify-center p-8">
+          <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-3xl z-200 flex items-center justify-center p-8">
             <div className="flex flex-col items-center gap-10">
               <div className="relative w-32 h-32 md:w-40 md:h-40">
-                <div className="absolute inset-0 border-[8px] md:border-[12px] border-white/5 rounded-full"></div>
-                <div className="absolute inset-0 border-[8px] md:border-[12px] border-[#FF6900] border-t-transparent rounded-full animate-spin"></div>
+                <div className="absolute inset-0 border-8 md:border-12 border-white/5 rounded-full"></div>
+                <div className="absolute inset-0 border-8 md:border-12 border-[#FF6900] border-t-transparent rounded-full animate-spin"></div>
               </div>
               <div className="text-center space-y-2">
                 <p className="text-[#FF6900] font-black text-3xl md:text-5xl tracking-tighter uppercase italic animate-pulse">Neural Extraction</p>
@@ -245,15 +245,15 @@ const App: React.FC = () => {
         <div id="comparison-results" className="flex flex-col xl:flex-row gap-12 md:gap-40 items-start scroll-mt-32">
           <div className="flex-1 min-w-0 w-full overflow-hidden">
             <div className="hyper-card overflow-hidden">
-              <div className="p-6 md:p-20 border-b border-[var(--border-color)] flex flex-col md:flex-row md:items-center justify-between gap-8 bg-[var(--bg-glass)]">
+              <div className="p-6 md:p-20 border-b border-(--border-color) flex flex-col md:flex-row md:items-center justify-between gap-8 bg-(--bg-glass)">
                 <div className="space-y-2 md:space-y-4">
-                  <h2 className="text-3xl md:text-6xl font-black text-[var(--text-primary)] tracking-tighter uppercase leading-none italic">{t.reportTitle}</h2>
+                  <h2 className="text-3xl md:text-6xl font-black text-(--text-primary) tracking-tighter uppercase leading-none italic">{t.reportTitle}</h2>
                   <p className="text-[10px] md:text-[11px] text-[#FF6900] font-black tracking-[0.4em] md:tracking-[0.6em] uppercase opacity-90">{t.reportSub}</p>
                 </div>
                 {phones.length > 0 && (
                   <button 
                     onClick={focusSearch}
-                    className="px-8 md:px-10 py-4 md:py-5 bg-zinc-950 text-white rounded-[1.5rem] md:rounded-[2rem] text-[10px] md:text-xs font-black uppercase tracking-[0.3em] hover:bg-[#FF6900] transition-all shadow-2xl"
+                    className="px-8 md:px-10 py-4 md:py-5 bg-zinc-950 text-white rounded-3xl md:rounded-4xl text-[10px] md:text-xs font-black uppercase tracking-[0.3em] hover:bg-[#FF6900] transition-all shadow-2xl"
                   >
                     {t.newScan}
                   </button>
@@ -273,14 +273,14 @@ const App: React.FC = () => {
           <aside className="w-full xl:w-[480px] space-y-12 md:space-y-16 shrink-0">
             <RankingSidebar phones={phones} lang={lang} />
             
-            <div className="hyper-card p-8 md:p-14 bg-[var(--bg-surface)] border-[var(--border-color)] text-[var(--text-primary)] relative overflow-hidden group shadow-3xl rounded-[2rem] md:rounded-[3rem]">
+            <div className="hyper-card p-8 md:p-14 bg-(--bg-surface) border-(--border-color) text-(--text-primary) relative overflow-hidden group shadow-3xl rounded-4xl md:rounded-[3rem]">
                <div className="absolute -top-10 -right-10 w-80 h-80 bg-[#FF6900] rounded-full blur-[140px] opacity-10 group-hover:opacity-20 transition-all duration-1000"></div>
                <div className="relative z-10">
                 <div className="flex items-center gap-3 md:gap-5 mb-6 md:mb-10">
                   <div className="w-2 md:w-3 h-8 md:h-10 bg-[#FF6900] rounded-full"></div>
                   <h4 className="text-[#FF6900] text-[10px] md:text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.6em]">{t.labDirective}</h4>
                 </div>
-                <p className="text-lg md:text-2xl text-[var(--text-primary)] leading-relaxed font-bold italic opacity-90 group-hover:opacity-100 transition-opacity">
+                <p className="text-lg md:text-2xl text-(--text-primary) leading-relaxed font-bold italic opacity-90 group-hover:opacity-100 transition-opacity">
                   {lang === 'pt' ? '"O benchmark de 2026 prioriza a estabilidade do FPS sustentado sobre o pico de performance de 5 segundos."' : 
                    lang === 'en' ? '"The 2026 benchmark prioritizes sustained FPS stability over the 5-second peak performance."' :
                    '"El benchmark de 2026 prioriza la estabilidad del FPS sostenido sobre el pico de rendimiento de 5 segundos."'}
@@ -293,25 +293,25 @@ const App: React.FC = () => {
 
       <LiraAssistant onAddPhone={handleAddPhone} lang={lang} />
 
-      <footer className="py-20 md:py-32 border-t border-[var(--border-color)] bg-[var(--bg-surface)] mt-20 md:mt-40">
+      <footer className="py-20 md:py-32 border-t border-(--border-color) bg-(--bg-surface) mt-20 md:mt-40">
         <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
           <div className="flex flex-col items-center mb-12 md:mb-20 gap-8">
             <div className="flex items-center gap-4 md:gap-6">
               <div className="h-px w-12 md:w-20 bg-zinc-200 dark:bg-zinc-800"></div>
-              <h3 className="text-xl md:text-2xl font-black text-[var(--text-primary)] tracking-tighter uppercase italic">
+              <h3 className="text-xl md:text-2xl font-black text-(--text-primary) tracking-tighter uppercase italic">
                 {t.engine} <span className="text-[#FF6900]">Core V3 Engine</span>
               </h3>
               <div className="h-px w-12 md:w-20 bg-zinc-200 dark:bg-zinc-800"></div>
             </div>
-            <div className="inline-flex items-center gap-3 md:gap-5 px-6 md:px-12 py-3 md:py-5 bg-[var(--bg-main)] rounded-full shadow-inner border border-[var(--border-color)]">
+            <div className="inline-flex items-center gap-3 md:gap-5 px-6 md:px-12 py-3 md:py-5 bg-[--bg-main] rounded-full shadow-inner border border-[--border-color]">
                <div className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-green-500 animate-pulse"></div>
-               <p className="text-[10px] md:text-sm font-black text-[var(--text-secondary)] uppercase tracking-[0.2em]">
+               <p className="text-[10px] md:text-sm font-black text-[--text-secondary] uppercase tracking-[0.2em]">
                  {t.neuralArch}
                </p>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-2 text-[10px] md:text-[12px] font-black text-[var(--text-secondary)] uppercase tracking-[0.2em]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-2 text-[10px] md:text-[12px] font-black text-[--text-secondary] uppercase tracking-[0.2em]">
             <span className="opacity-60 whitespace-nowrap">
               © 2026 SmartCompare | {t.footerMadeBy}
             </span>
@@ -319,7 +319,7 @@ const App: React.FC = () => {
               href="https://github.com/Rukafuu" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-[var(--text-primary)] hover:text-[#FF6900] transition-all duration-300 ease-in-out transform hover:scale-105 group tracking-normal normal-case"
+              className="flex items-center gap-3 text-(--text-primary) hover:text-[#FF6900] transition-all duration-300 ease-in-out transform hover:scale-105 group tracking-normal normal-case"
             >
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                 <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd"></path>

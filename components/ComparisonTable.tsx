@@ -78,7 +78,7 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
   if (phones.length === 0) {
     return (
       <div className="min-h-[200px] flex flex-col items-center justify-center p-8 md:p-12 text-center">
-        <p className="text-sm font-medium text-[var(--text-secondary)] mb-4">{t.empty}</p>
+        <p className="text-sm font-medium text-(--text-secondary) mb-4">{t.empty}</p>
         <button 
           onClick={onAddClick}
           className="text-xs font-bold text-[#FF6900] uppercase tracking-[0.2em] hover:opacity-80 transition-opacity"
@@ -106,9 +106,9 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
   const specRows = [
     { label: 'AnTuTu v10', key: 'antutu', suffix: ' pts', highlight: true },
     { label: t.processor, key: 'processor' },
-    { label: t.display, accessor: (p: Smartphone) => `${p.screenSize}" ${p.screenType}` },
+    { label: t.display, accessor: (p: Smartphone) => p.screenSize ? `${p.screenSize}" ${p.screenType || ''}` : 'Não inf.' },
     { label: t.refresh, key: 'refreshRate' },
-    { label: t.ram, accessor: (p: Smartphone) => `${p.ram.physical}GB + ${p.ram.virtual}GB` },
+    { label: t.ram, accessor: (p: Smartphone) => (p.ram.physical > 0) ? `${p.ram.physical}GB + ${p.ram.virtual}GB` : 'N/A' },
     { label: t.storage, key: 'storage', suffix: ' GB' },
     { label: t.battery, key: 'battery', suffix: ' mAh' },
     { label: t.rearCam, key: 'rearCamera' },
@@ -145,13 +145,13 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
       <table className="w-full border-separate border-spacing-0 table-fixed min-w-[360px]">
         <thead>
           <tr>
-            <th className="p-3 md:p-4 text-left border-b border-[var(--border-color)] bg-[var(--bg-glass)] backdrop-blur-md w-[85px] md:w-[110px] sticky left-0 z-20">
-              <span className="text-[8px] md:text-[9px] font-black text-[var(--text-secondary)] uppercase tracking-[0.1em] md:tracking-[0.2em]">{t.labelMain}</span>
+            <th className="p-3 md:p-4 text-left border-b border-(--border-color) bg-(--bg-glass) backdrop-blur-md w-[85px] md:w-[110px] sticky left-0 z-20">
+              <span className="text-[8px] md:text-[9px] font-black text-(--text-secondary) uppercase tracking-widest md:tracking-[0.2em]">{t.labelMain}</span>
             </th>
             {phones.map((phone) => (
               <th 
                 key={phone.id} 
-                className="p-3 md:p-4 border-b border-l border-[var(--border-color)] min-w-[120px] md:min-w-[140px] relative bg-[var(--bg-glass)] backdrop-blur-md"
+                className="p-3 md:p-4 border-b border-l border-(--border-color) min-w-[120px] md:min-w-[140px] relative bg-(--bg-glass) backdrop-blur-md"
               >
                 <button 
                   onClick={() => onRemove(phone.id)}
@@ -163,11 +163,11 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
                   <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center text-xs md:text-base font-black shadow-lg ${
                     phone.isAnatelCertified 
                     ? 'bg-[#FF6900] text-white' 
-                    : 'bg-zinc-200 dark:bg-zinc-800 text-[var(--text-primary)]'
+                    : 'bg-zinc-200 dark:bg-zinc-800 text-(--text-primary)'
                   }`}>
                     {phone.model.charAt(0)}
                   </div>
-                  <h3 className="text-[9px] md:text-[10px] font-black text-[var(--text-primary)] uppercase tracking-tighter line-clamp-2 leading-[1.1] text-center">
+                  <h3 className="text-[9px] md:text-[10px] font-black text-(--text-primary) uppercase tracking-tighter line-clamp-2 leading-[1.1] text-center">
                     {phone.model}
                   </h3>
                 </div>
@@ -177,8 +177,8 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
         </thead>
         <tbody>
           {specRows.map((row, idx) => (
-            <tr key={idx} className="group hover:bg-[var(--border-color)]/30 transition-colors">
-              <td className="p-2 md:p-3 font-black text-[8px] md:text-[9px] text-[var(--text-secondary)] uppercase tracking-wider border-b border-[var(--border-color)] sticky left-0 z-10 bg-[var(--bg-surface)]/95 backdrop-blur-sm group-hover:bg-[var(--bg-surface)]">
+            <tr key={idx} className="group hover:bg-(--border-color)/30 transition-colors">
+              <td className="p-2 md:p-3 font-black text-[8px] md:text-[9px] text-(--text-secondary) uppercase tracking-wider border-b border-(--border-color) sticky left-0 z-10 bg-(--bg-surface)/95 backdrop-blur-sm group-hover:bg-(--bg-surface)">
                 {row.label}
               </td>
               {phones.map((phone) => {
@@ -186,13 +186,18 @@ const ComparisonTable: React.FC<Props> = ({ phones, onRemove, onAddClick, lang }
                  const isOfficial = phone.isAnatelCertified;
 
                  return (
-                  <td key={phone.id} className={`p-2 md:p-3 text-center text-[10px] md:text-[11px] font-semibold border-b border-l border-[var(--border-color)] transition-all duration-300 ${
+                  <td key={phone.id} className={`p-2 md:p-3 text-center text-[10px] md:text-[11px] font-semibold border-b border-l border-(--border-color) transition-all duration-300 ${
                     isWarrantyRow && isOfficial 
                     ? 'bg-[#FF6900]/5' 
                     : ''
                   }`}>
-                    <div className={`${row.highlight ? 'text-[#FF6900] font-black' : 'text-[var(--text-primary)]'} leading-tight`}>
-                      {row.accessor ? row.accessor(phone) : (phone as any)[row.key!]?.toLocaleString('pt-BR')}{row.suffix}
+                    <div className={`${row.highlight ? 'text-[#FF6900] font-black' : 'text-(--text-primary)'} leading-tight`}>
+                      {row.accessor ? row.accessor(phone) : (() => {
+                        const val = (phone as any)[row.key!];
+                        if (val === undefined || val === null || val === '') return 'Não informado';
+                        if (typeof val === 'number' && val === 0) return 'Buscando...';
+                        return val.toLocaleString('pt-BR');
+                      })()}{row.suffix}
                     </div>
                   </td>
                 );

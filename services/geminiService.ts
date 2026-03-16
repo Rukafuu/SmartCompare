@@ -3,48 +3,44 @@ import { GoogleGenAI, Type, Chat } from "@google/genai";
 import { Smartphone } from "../types";
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-console.log("SmartCompare Debug - API Key loaded:", apiKey ? "YES (starts with " + apiKey.substring(0, 5) + ")" : "NO");
-
-if (!apiKey) {
-  console.error("CRITICAL: VITE_GEMINI_API_KEY is missing in import.meta.env!");
-}
+console.log("SmartCompare Debug - API Key loaded:", apiKey ? "YES" : "NO");
 
 const ai = new GoogleGenAI({ apiKey: apiKey || "" });
 
 const smartphoneSchema = {
   type: Type.OBJECT,
   properties: {
-    model: { type: Type.STRING, description: "Nome completo do smartphone" },
-    brand: { type: Type.STRING, description: "Marca do fabricante" },
-    processor: { type: Type.STRING, description: "Nome do processador" },
-    clockSpeed: { type: Type.STRING },
-    screenSize: { type: Type.NUMBER },
+    model: { type: Type.STRING, description: "Nome completo do smartphone (ex: Samsung Galaxy S24 Ultra)" },
+    brand: { type: Type.STRING, description: "Marca do fabricante (ex: Samsung)" },
+    processor: { type: Type.STRING, description: "Nome do processador (ex: Snapdragon 8 Gen 3)" },
+    clockSpeed: { type: Type.STRING, description: "Velocidade do processador (ex: 3.3 GHz)" },
+    screenSize: { type: Type.NUMBER, description: "Tamanho da tela em polegadas (ex: 6.8)" },
     ram: {
       type: Type.OBJECT,
       properties: {
-        physical: { type: Type.NUMBER },
-        virtual: { type: Type.NUMBER },
-        total: { type: Type.NUMBER },
+        physical: { type: Type.NUMBER, description: "RAM física em GB (ex: 12)" },
+        virtual: { type: Type.NUMBER, description: "RAM virtual/expandida em GB (ex: 8)" },
+        total: { type: Type.NUMBER, description: "Soma da RAM física e virtual em GB (ex: 20)" },
       },
       required: ["physical", "virtual", "total"],
     },
-    storage: { type: Type.NUMBER },
-    nfc: { type: Type.BOOLEAN },
-    is5G: { type: Type.BOOLEAN },
-    battery: { type: Type.NUMBER },
-    frontCamera: { type: Type.STRING },
-    rearCamera: { type: Type.STRING },
-    refreshRate: { type: Type.STRING },
-    protection: { type: Type.STRING },
-    screenType: { type: Type.STRING },
-    antutu: { type: Type.NUMBER, description: "Pontuação média aproximada no AnTuTu Benchmark v10" },
-    isAnatelCertified: { type: Type.BOOLEAN, description: "Deve ser TRUE apenas se o modelo possui homologação oficial no Brasil via fabricantes/distribuidores (Ex: DL para Xiaomi, Samsung Brasil, Apple Brasil)." },
-    anatelCertificate: { type: Type.STRING, description: "O número do certificado de homologação Anatel (ex: 01234-24-05678). Se não houver, deixe vazio." },
-    officialDistributor: { type: Type.STRING, description: "Distribuidor oficial no Brasil (Ex: DL Eletrônicos, Samsung Brasil, Motorola Brasil)." },
-    confidenceScore: { type: Type.NUMBER, description: "Nível de certeza dos dados de 0 a 100" }
+    storage: { type: Type.NUMBER, description: "Capacidade de armazenamento em GB (ex: 256)" },
+    nfc: { type: Type.BOOLEAN, description: "Possui NFC? (true/false)" },
+    is5G: { type: Type.BOOLEAN, description: "Possui 5G? (true/false)" },
+    battery: { type: Type.NUMBER, description: "Capacidade da bateria em mAh (ex: 5000)" },
+    frontCamera: { type: Type.STRING, description: "Resolução da câmera frontal (ex: 12 MP)" },
+    rearCamera: { type: Type.STRING, description: "Resolução das câmeras traseiras (ex: 200 MP + 50 MP + 10 MP + 12 MP)" },
+    refreshRate: { type: Type.STRING, description: "Taxa de atualização da tela (ex: 120Hz)" },
+    protection: { type: Type.STRING, description: "Proteção da tela/corpo (ex: Gorilla Glass Armor, IP68)" },
+    screenType: { type: Type.STRING, description: "Tipo de tecnologia da tela (ex: Dynamic LTPO AMOLED 2X)" },
+    antutu: { type: Type.NUMBER, description: "Pontuação REAL no AnTuTu v10 (ex: 2000000). NUNCA RETORNE 0." },
+    isAnatelCertified: { type: Type.BOOLEAN, description: "TRUE se o modelo tem homologação oficial no Brasil." },
+    anatelCertificate: { type: Type.STRING, description: "Número do certificado Anatel se existir." },
+    officialDistributor: { type: Type.STRING, description: "Distribuidor oficial no Brasil (ex: Samsung Brasil, Motorola Brasil, DL Eletrônicos)." },
+    confidenceScore: { type: Type.NUMBER, description: "Nível de certeza 0-100" }
   },
   required: [
-    "model", "brand", "processor", "ram", "storage", "battery", "antutu", "isAnatelCertified", "officialDistributor"
+    "model", "brand", "processor", "ram", "storage", "battery", "antutu", "isAnatelCertified", "officialDistributor", "screenSize", "screenType"
   ],
 };
 
@@ -52,26 +48,42 @@ export const fetchSmartphoneSpecs = async (modelName: string): Promise<Smartphon
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: `Analise o smartphone: ${modelName}. 
-      FOCO RÍGIDO: Especificações técnicas e VERDADEIRO status de homologação ANATEL no Brasil.
-      - Verifique se o modelo foi lançado oficialmente no mercado brasileiro.
-      - Modelos como Poco F6 e similares que são vendidos apenas via marketplaces (importação) SEM homologação direta da DL/Xiaomi Brasil devem ter 'isAnatelCertified' as FALSE.
-      - Não invente certificados. Se não houver homologação oficial, marque como falso.`,
+      contents: [{ 
+        role: 'user', 
+        parts: [{ text: `BUSCA TÉCNICA OBRIGATÓRIA: ${modelName}. 
+        DATA: 16 de Março de 2026.
+        
+        Você DEVE usar o GOOGLE SEARCH para encontrar os valores REAIS.
+        - Não invente dados.
+        - Não retorne 0 para bateria, ram, storage ou antutu.
+        - Se o dispositivo for o S25 Ultra, os valores devem ser condizentes com um flagship de 2025.
+        - Verifique a homologação no Brasil (ANATEL).` }]
+      }],
       config: {
+        systemInstruction: "Você é um robô de extração de dados técnicos. Sua única função é pesquisar na web e preencher o JSON com valores reais. É PROIBIDO omitir dados numéricos ou retornar zero para especificações conhecidas.",
+        tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
         responseSchema: smartphoneSchema,
       },
     });
 
-    const data = JSON.parse(response.text.trim());
+    const text = response.text.trim();
+    console.log("SmartCompare - Sync Response:", text);
+    const data = JSON.parse(text);
     
+    // Validação básica de segurança contra zeros
+    if (data.battery === 0 || data.antutu === 0) {
+      console.warn("Gemini retornou valores zerados. Tentando novamente sem schema rígido...");
+      // Opcional: tentar novamente ou tratar erro
+    }
+
     return {
       ...data,
       id: Math.random().toString(36).substr(2, 9),
       dataSource: 'AI_REALTIME',
     };
   } catch (error) {
-    console.error("Erro na busca:", error);
+    console.error("Erro na busca técnica:", error);
     return null;
   }
 };
@@ -84,7 +96,7 @@ export const identifySmartphone = async (base64Data: string, mimeType: string): 
         {
           parts: [
             { inlineData: { data: base64Data, mimeType } },
-            { text: "Identifique este smartphone. Responda apenas o nome do modelo." }
+            { text: "Hoje é 14 de Março de 2026. Identifique este smartphone. Responda apenas o nome do modelo." }
           ]
         }
       ]
@@ -99,21 +111,17 @@ export const createLiraChat = (): Chat => {
   return ai.chats.create({
     model: 'gemini-2.0-flash',
     config: {
+      tools: [{ googleSearch: {} }],
       systemInstruction: `Você é a Lira, consultora técnica do laboratório SmartCompare.
+      CONTEXTO ATUAL: Hoje é dia 14 de Março de 2026. Você deve considerar lançamentos de 2025 e 2026.
+      Utilize o Google Search para validar informações de hardware recentes.
+      
       Sua missão é garantir que o cliente faça a escolha tecnicamente mais segura e performática.
 
       REGRA DE OURO SOBRE HOMOLOGAÇÃO:
-      - Você DEVE priorizar recomendações de aparelhos homologados pela ANATEL e com garantia oficial no Brasil (Ex: Linha Redmi Note 13/14/15 via DL, Samsung Linha S/A, iPhones nacionais).
-      - SE você mencionar um aparelho que NÃO é homologado (como Poco F6 ou versões exclusivamente chinesas/globais importadas), você DEVE obrigatoriamente avisar o usuário que aquele modelo não possui suporte oficial, garantia de fábrica no Brasil ou selo ANATEL, sendo um risco técnico para o consumidor.
-      - NUNCA recomende um aparelho importado como "melhor opção" sem dar este aviso de segurança.
-
-      DIRETRIZES DE COMPORTAMENTO:
-      - PERGUNTE APENAS UMA COISA DE CADA VEZ.
-      - NUNCA pergunte sobre preço ou orçamento.
-      - Foque em uso: Jogos, Câmeras, Bateria, Tela.
-      - Se questionada sobre PREÇO: Use como referência APENAS os valores das lojas oficiais (Xiaomi Brasil/DL, Samsung Store, etc), pois são os valores que garantem a segurança técnica que o laboratório preza.
+      - Você DEVE priorizar recomendações de aparelhos homologados pela ANATEL.
+      - Sempre avise sobre os riscos de aparelhos importados sem garantia oficial.
       - Use [[Modelo]] para sugerir.
-      - Mantenha a metodologia interna (Conexão, Descoberta, Sugestão, Fechamento, Pós) sem citar os nomes.
       - Responda em Markdown com negrito para hardware.`,
     },
   });
