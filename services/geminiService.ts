@@ -46,44 +46,65 @@ const smartphoneSchema = {
 
 export const fetchSmartphoneSpecs = async (modelName: string): Promise<Smartphone | null> => {
   try {
-    const response = await ai.models.generateContent({
+    // PASSO 1: Pesquisa profunda com Google Search (Sem Schema, pois o Gemini não permite os dois juntos)
+    const searchResponse = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [{ 
         role: 'user', 
-        parts: [{ text: `BUSCA TÉCNICA OBRIGATÓRIA: ${modelName}. 
+        parts: [{ text: `Realize uma pesquisa técnica exaustiva sobre o smartphone: ${modelName}. 
         DATA: 16 de Março de 2026.
         
-        Você DEVE usar o GOOGLE SEARCH para encontrar os valores REAIS.
-        - Não invente dados.
-        - Não retorne 0 para bateria, ram, storage ou antutu.
-        - Se o dispositivo for o S25 Ultra, os valores devem ser condizentes com um flagship de 2025.
-        - Verifique a homologação no Brasil (ANATEL).` }]
+        OBRIGATÓRIO encontrar:
+        1. Processador exato e clock.
+        2. Bateria (mAh) e Storage (GB).
+        3. RAM física e RAM virtual suportada.
+        4. Pontuação média no AnTuTu v10 (Benchmark real).
+        5. Status de homologação na ANATEL (Brasil) e quem é o distribuidor oficial (ex: DL, Samsung Brasil, etc).
+        6. Tamanho e tipo de tela, taxa de atualização e proteção.
+        
+        Retorne todos os dados técnicos encontrados de forma detalhada.` }]
       }],
       config: {
-        systemInstruction: "Você é um robô de extração de dados técnicos. Sua única função é pesquisar na web e preencher o JSON com valores reais. É PROIBIDO omitir dados numéricos ou retornar zero para especificações conhecidas.",
         tools: [{ googleSearch: {} }],
+      },
+    });
+
+    const researchText = searchResponse.text;
+    console.log("SmartCompare - Research Data:", researchText);
+
+    // PASSO 2: Formatação dos dados da pesquisa em JSON usando o Schema
+    const formatResponse = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: [{ 
+        role: 'user', 
+        parts: [{ text: `Com base nesta pesquisa:
+        ---
+        ${researchText}
+        ---
+        Extraia e formate os dados no JSON seguindo o schema.
+        REGRAS:
+        - Se o Antutu não foi citado explicitamente, use o valor de mercado conhecido para o processador detectado.
+        - NUNCA retorne 0 para bateria ou antutu.
+        - Campo 'isAnatelCertified' deve ser TRUE apenas se houver confirmação de venda oficial no Brasil.` }]
+      }],
+      config: {
+        systemInstruction: "Você é um conversor de texto técnico para JSON. Extraia os valores com precisão.",
         responseMimeType: "application/json",
         responseSchema: smartphoneSchema,
       },
     });
 
-    const text = response.text.trim();
-    console.log("SmartCompare - Sync Response:", text);
-    const data = JSON.parse(text);
+    const jsonText = formatResponse.text.trim();
+    console.log("SmartCompare - Formatted JSON:", jsonText);
+    const data = JSON.parse(jsonText);
     
-    // Validação básica de segurança contra zeros
-    if (data.battery === 0 || data.antutu === 0) {
-      console.warn("Gemini retornou valores zerados. Tentando novamente sem schema rígido...");
-      // Opcional: tentar novamente ou tratar erro
-    }
-
     return {
       ...data,
       id: Math.random().toString(36).substr(2, 9),
       dataSource: 'AI_REALTIME',
     };
   } catch (error) {
-    console.error("Erro na busca técnica:", error);
+    console.error("Erro na busca técnica assistida:", error);
     return null;
   }
 };
